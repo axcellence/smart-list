@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ListPlusIcon } from "lucide-react";
+import { ListPlusIcon, LoaderIcon, CheckCircleIcon } from "lucide-react";
 import "./App.css";
 import { getItemCategory } from "./utils";
 import {
@@ -10,6 +10,7 @@ import {
   todoCategories,
 } from "./types";
 import CategoryExamples from "./data.json";
+import { useGroceryListStore } from "./store";
 
 export default function App() {
   return (
@@ -27,7 +28,6 @@ async function fetchItemCategory(item: string) {
 
   if (inExample) {
     return inExample[0] as TodoCategory;
-
   }
 
   const response = await getItemCategory(item.toLowerCase());
@@ -72,10 +72,14 @@ async function fetchItemCategory(item: string) {
 }
 
 function TodoList() {
-  const [todos, setTodos] = useState<TodoItem[]>(seedTodos);
+  const todos = useGroceryListStore((state) => state.items);
+  const addItem = useGroceryListStore((state) => state.addItem);
+  const removeItem = useGroceryListStore((state) => state.removeItem);
   const [newTodoItemText, setNewTodoItemText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function addTodo() {
+    setLoading(true);
     const newId = todos.length + 1;
     // check if newTodoItemText is empty
     if (newTodoItemText === "") {
@@ -104,13 +108,9 @@ function TodoList() {
       category,
     };
 
-    setTodos([...todos, newItem]);
-
+    addItem(newItem);
+    setLoading(false);
     setNewTodoItemText("");
-  }
-
-  function removeTodo(itemId: number) {
-    setTodos(todos.filter((todo) => todo.id !== itemId));
   }
 
   const todosByCategory = useCallback(() => {
@@ -165,7 +165,7 @@ function TodoList() {
                       <TodoItem
                         key={todo.id}
                         todo={todo}
-                        removeTodo={removeTodo}
+                        removeTodo={removeItem}
                       />
                     ))}
                   </AnimatePresence>
@@ -207,7 +207,11 @@ function TodoList() {
                   addTodo();
                 }}
               >
-                <ListPlusIcon className="w-5 h-5" />
+                {!loading ? (
+                  <ListPlusIcon className="w-5 h-5" />
+                ) : (
+                  <LoaderIcon className="animate-spin" />
+                )}
               </motion.button>
             )}
           </AnimatePresence>
@@ -239,16 +243,16 @@ function TodoItem({
       initial="hidden"
       animate="visible"
       exit="hidden"
-      className="flex gap-4 justify-between"
+      className="flex gap-4 items-center"
     >
-      <div>{todo.text}</div>
       <button
         onClick={() => {
           removeTodo(todo.id);
         }}
       >
-        &times;
+        <CheckCircleIcon className="w-5 h-5 opacity-50 transition hover:text-blue-400 hover:opacity-100" />
       </button>
+      <div>{todo.text}</div>
     </motion.div>
   );
 }
