@@ -1,4 +1,5 @@
-import {  useState, useCallback } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ListPlusIcon } from "lucide-react";
 import "./App.css";
 import { getItemCategory } from "./utils";
 import {
@@ -160,46 +161,80 @@ function TodoList() {
       <h1 className="text-2xl font-semibold mb-4">
         Grocery List w/auto categories
       </h1>
-      <div>
-        {Object.entries(todosByCategory()).map(([category, todos]) => {
-          if (!todos.length) {
-            return null;
-          }
-          return (
-            <div key={category} className="my-4 space-y-2">
-              <h2 className="font-bold">{category}</h2>
-              <div>
-                {todos.map((todo) => (
-                  <TodoItem key={todo.id} todo={todo} removeTodo={removeTodo} />
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      <div className="flex">
-
-      <input
-        type="text"
-        className="border border-gray-300 rounded-l-md px-4 py-2 w-full "
-        value={newTodoItemText}
-        onChange={(event) => {
-          setNewTodoItemText(event.target.value);
-        }}
-        onKeyDown={async (event) => {
-          if (event.key === "Enter") {
-            await addTodo();
-          }
-        }}
-      />
-      <button
-      className="rounded-r-md bg-blue-500 text-white px-4 flex-shrink-0"
-        onClick={() => {
-          addTodo();
-        }}
-      >
-        Add item
-      </button>
+      <motion.div layout className="p-4">
+        <AnimatePresence>
+          {Object.entries(todosByCategory()).map(([category, todos]) => {
+            if (!todos.length) {
+              return null;
+            }
+            return (
+              <motion.div
+                initial={{
+                  opacity: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                }}
+                exit={{
+                  opacity: 0,
+                }}
+                key={category}
+                className="my-4 space-y-2"
+              >
+                <h2 className="font-bold">{category}</h2>
+                <div>
+                  <AnimatePresence>
+                    {todos.map((todo) => (
+                      <TodoItem
+                        key={todo.id}
+                        todo={todo}
+                        removeTodo={removeTodo}
+                      />
+                    ))}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </motion.div>
+      <div className="mt-auto">
+        <div className="flex border-t">
+          <input
+            type="text"
+            className="px-4 py-3 w-full "
+            value={newTodoItemText}
+            placeholder="Broccoli, bananas, etc."
+            onChange={(event) => {
+              setNewTodoItemText(event.target.value);
+            }}
+            onKeyDown={async (event) => {
+              if (event.key === "Enter") {
+                await addTodo();
+              }
+            }}
+          />
+          <AnimatePresence>
+            {newTodoItemText.length > 3 && (
+              <motion.button
+                initial={{
+                  opacity: 0,
+                  scaleX: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                  scaleX: 1,
+                }}
+                className="flex gap-2 items-center rounded-r-md bg-blue-500 text-white px-3 flex-shrink-0"
+                onClick={() => {
+                  addTodo();
+                }}
+              >
+                <ListPlusIcon className="w-5 h-5" />
+              </motion.button>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
