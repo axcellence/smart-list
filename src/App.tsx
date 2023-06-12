@@ -150,7 +150,13 @@ function TodoList() {
       );
 
     todos.forEach((todo) => {
-      todosByCategory[todo.category].push(todo);
+      if (!todo.category) {
+        return;
+      }
+      if (!todosByCategory[todo.category]) {
+        todosByCategory[todo.category] = [];
+      }
+      todosByCategory[todo.category]?.push(todo);
     });
 
     return todosByCategory;
