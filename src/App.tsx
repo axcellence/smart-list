@@ -134,7 +134,7 @@ function TodoList() {
   }, [todos]);
 
   return (
-    <div className="min-h-screen max-w-sm flex flex-col pt-4 text-zinc-700">
+    <div className="min-h-dynamic max-w-sm flex flex-col pt-4 text-zinc-700">
       <h1 className="text-2xl font-semibold mb-4 px-4">
         Grocery List w/auto categories
       </h1>
