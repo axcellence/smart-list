@@ -22,7 +22,7 @@ export default function App() {
 
 async function fetchItemCategory(item: string) {
   // check if item is in CategoryExamples
-  const inExample = Object.entries(CategoryExamples).find(([category, items]) =>
+  const inExample = Object.entries(CategoryExamples).find(([, items]) =>
     items.includes(item)
   );
 
