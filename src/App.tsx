@@ -19,45 +19,6 @@ export default function App() {
   );
 }
 
-const seedTodos: TodoItem[] = [
-  {
-    id: 1,
-    text: "Milk",
-    completed: false,
-    category: "Dairy and eggs",
-  },
-  {
-    id: 2,
-    text: "Eggs",
-    completed: false,
-    category: "Dairy and eggs",
-  },
-  {
-    id: 3,
-    text: "Bread",
-    completed: false,
-    category: "Breads and bakery",
-  },
-  {
-    id: 4,
-    text: "Butter",
-    completed: false,
-    category: "Dairy and eggs",
-  },
-  {
-    id: 5,
-    text: "Cheese",
-    completed: false,
-    category: "Dairy and eggs",
-  },
-  {
-    id: 6,
-    text: "Apples",
-    completed: false,
-    category: "Fruits and vegetables",
-  },
-];
-
 async function fetchItemCategory(item: string) {
   // check if item is in CategoryExamples
   const inExample = Object.entries(CategoryExamples).find(([category, items]) =>
