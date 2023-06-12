@@ -247,8 +247,23 @@ function TodoItem({
   todo: TodoItem;
   removeTodo: (itemId: number) => void;
 }) {
+  const variants = {
+    hidden: {
+      opacity: 0,
+    },
+    visible: {
+      opacity: 1,
+    },
+  };
+
   return (
-    <div className="flex gap-4 justify-between">
+    <motion.div
+      variants={variants}
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      className="flex gap-4 justify-between"
+    >
       <div>{todo.text}</div>
       <button
         onClick={() => {
@@ -257,6 +272,6 @@ function TodoItem({
       >
         &times;
       </button>
-    </div>
+    </motion.div>
   );
 }
