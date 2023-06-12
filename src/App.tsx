@@ -1,3 +1,4 @@
+import { useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ListPlusIcon } from "lucide-react";
 import "./App.css";
@@ -8,16 +9,15 @@ import {
   type TodoItem,
   todoCategories,
 } from "./types";
+import CategoryExamples from "./data.json";
 
-function App() {
+export default function App() {
   return (
     <>
       <TodoList />
     </>
   );
 }
-
-export default App;
 
 const seedTodos: TodoItem[] = [
   {
@@ -59,6 +59,16 @@ const seedTodos: TodoItem[] = [
 ];
 
 async function fetchItemCategory(item: string) {
+  // check if item is in CategoryExamples
+  const inExample = Object.entries(CategoryExamples).find(([category, items]) =>
+    items.includes(item)
+  );
+
+  if (inExample) {
+    return inExample[0] as TodoCategory;
+
+  }
+
   const response = await getItemCategory(item.toLowerCase());
 
   if (!response.ok) {
