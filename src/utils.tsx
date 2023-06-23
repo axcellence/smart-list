@@ -8,7 +8,7 @@ export async function getItemCategory(item: string) {
   }
 
   const payload = {
-    model: "gpt-3.5-turbo",
+    model: "gpt-3.5-turbo-0613",
     messages: [
       {
         role: "system",
